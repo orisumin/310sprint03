@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Garyeong Bae">
+    <meta name="description" content="search">
+    <script src="final.js" defer></script>
+    <link href="final.css" rel="stylesheet">
+    <title>Pokemon Search</title>
+</head>
+<body>
+    <header>
+        <a href="search.html"><img src="img/pokemon_violet_logo.png" alt="pokemon violet logo" id="logo"></a>
+    </header>
+    <main>
+        <div id="banner"><img src="img/violet.avif" id="bannerImg">
+        </div>
+        <h1> Pokémon Violet: Base Forms </h1>
+
+            <div id="search">       
+                <form>               
+                    <input type="text" id="searchBar" name="search" placeholder="find a pokemon by their names, abilities, and categories" autocomplete="off">
+                    <button type="button" id="searchBtn">
+                        <img src="img/search.png" alt="magnifier image" id="magnifier">
+                    </button>
+                </form>                        
+            </div>
+            <div id="dropdown-container">
+                <button id="dropdownBtn">filters ⮟</button>
+            </div>
+            
+            <div class="widerView">
+            <wrapper id="filters" hidden>
+                <form>
+                    <div id="types">
+                        <div class="checksets">
+                            <input type="checkbox" class="checkboxes" name="elementalType1" id="elementalType1" value="bug">
+                            <label for="elementalType1" style="color: #6ba001;">Bug <img src="img/bug.png"></label>
+                        </div>
+                        <div class="checksets">
+                            <input type="checkbox" class="checkboxes" name="elementalType2" id="elementalType2" value="dark">
+                            <label for="elementalType2" style="color: #5a5166;">Dark <img src="img/dark.png"></label>
+                        </div>
+                        <div class="checksets">
+                            <input type="checkbox" class="checkboxes" name="elementalType3" id="elementalType3" value="dragon">
+                            <label for="elementalType3" style="color: #006cc5;">Dragon <img src="img/dragon.png"></label>
+                        </div>
+                        <div class="checksets">
+                            <input type="checkbox" class="checkboxes" name="elementalType4" id="elementalType4" value="electric">
+                            <label for="elementalType4" style="color: #c7a200;">Electric <img src="img/electric.png"></label>
+                        </div>
+                        <div class="checksets">
+                            <input type="checkbox" class="checkboxes" name="elementalType5" id="elementalType5" value="fairy">
+                            <label for="elementalType5" style="color: #d43dca;">Fairy  <img src="img/fairy.png"></label>
+                        </div>
+                        <div class="checksets">
+                            <input type="checkbox" class="checkboxes" name="elementalType6" id="elementalType6" value="fight">
+                            <label for="elementalType6" style="color: #cf3e69;">Fight  <img src="img/fight.png"></label>
+                        </div>
+                        <div class="checksets">
+                            <input type="checkbox" class="checkboxes" name="elementalType7" id="elementalType7" value="fire">
+                            <label for="elementalType7" style="color: #fe7e22;">Fire  <img src="img/fire.png"></label>
+                        </div>
+                        <div class="checksets">
+                            <input type="checkbox" class="checkboxes" name="elementalType8" id="elementalType8" value="flying">
+                            <label for="elementalType8" style="color: #5572b0;">Flying <img src="img/flying.png"></label>
+                        </div>
+                        <div class="checksets">
+                            <input type="checkbox" class="checkboxes" name="elementalType9" id="elementalType9" value="ghost">
+                            <label for="elementalType9" style="color: #5268ac;">Ghost <img src="img/ghost.png"></label>
+                        </div>
+                        <div class="checksets">
+                            <input type="checkbox" class="checkboxes" name="elementalType10" id="elementalType10" value="grass">
+                            <label for="elementalType10" style="color: #1c940e;">Grass <img src="img/grass.png"></label>
+                        </div>
+                        <div class="checksets">
+                            <input type="checkbox" class="checkboxes" name="elementalType11" id="elementalType11" value="ground">
+                            <label for="elementalType11" style="color: #da7744;">Ground <img src="img/ground.png"></label>
+                        </div>
+                        <div class="checksets">
+                            <input type="checkbox" class="checkboxes" name="elementalType12" id="elementalType12" value="ice">
+                            <label for="elementalType12" style="color: #249383;">Ice <img src="img/ice.png"></label>
+                        </div>
+                        <div class="checksets">
+                            <input type="checkbox" class="checkboxes" name="elementalType13" id="elementalType13" value="normal">
+                            <label for="elementalType13" style="color: #6d757a;">Normal <img src="img/normal.png"></label>
+                        </div>
+                        <div class="checksets">
+                            <input type="checkbox" class="checkboxes" name="elementalType14" id="elementalType14" value="poison">
+                            <label for="elementalType14" style="color: #ab6ac9;">Poision <img src="img/poison.png"></label>
+                        </div>
+                        <div class="checksets">
+                            <input type="checkbox" class="checkboxes" name="elementalType15" id="elementalType15" value="psychic">
+                            <label for="elementalType15" style="color: #d25256;">Psychic <img src="img/psychic.png"></label>
+                        </div>
+                        <div class="checksets">
+                            <input type="checkbox" class="checkboxes" name="elementalType16" id="elementalType16" value="rock">
+                            <label for="elementalType16" style="color: #877b57;">Rock <img src="img/rock.png"></label>
+                        </div>
+                        <div class="checksets">
+                            <input type="checkbox" class="checkboxes" name="elementalType17" id="elementalType17" value="steel">
+                            <label for="elementalType17" style="color: #437385;">Steel <img src="img/steel.png"></label>
+                        </div>
+                        <div class="checksets">
+                            <input type="checkbox" class="checkboxes" name="elementalType18" id="elementalType18"value="water">
+                            <label for="elementalType18" style="color: #4086d1;">Water <img src="img/water.png"></label>
+                        </div>
+                    </div>               
+                    <button class="apply">Apply</button>
+                </form>
+            </wrapper>
+
+        <section id="cards-container">
+            <div class="card">
+                <div class="img-part">
+                    <img src="img/Fuecoco.webp" alt="Fuecoco image" class="pokemon"> 
+                    <div class="PKMtype">
+                        <p style="color: #ffa600;"><b>FIRE</b> </p>
+                        <img src="img/fire.png">
+                    </div>
+                </div>
+
+                    <div class="description">
+                        <p class="name">Fuecoco</p>
+                        <p class="category">Fire Croc Pokémon</p>
+                        <p>Height: 0.4m
+                            <br>Weight: 9.8kg
+                            <br>Ability: Blaze
+                        </p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="img-part">
+                    <img src="img/Sprigatito.webp" alt="Sprigatito image" class="pokemon"> 
+                    <div class="PKMtype">
+                        <p style="color: #71d164;"><b>GRASS</b> </p>
+                        <img src="img/grass.png">
+                    </div>
+                </div>
+
+                    <div class="description">
+                        <p class="name">Sprigatito</p>
+                        <p class="category">Grass Cat Pokémon</p>
+                        <p>Height: 0.4m
+                            <br>Weight: 4.1kg
+                            <br>Ability: Overgrow
+                        </p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="img-part">
+                    <img src="img/Quaxly.webp" alt="Quaxly image" class="pokemon"> 
+                    <div class="PKMtype">
+                        <p style="color: #72aaea;"><b>WATER</b> </p>
+                        <img src="img/water.png">
+                    </div>
+                </div>
+
+                    <div class="description">
+                        <p class="name">Quaxly</p>
+                        <p class="category">Duckling Pokémon</p>
+                        <p>Height: 0.5m
+                            <br>Weight: 6.1kg
+                            <br>Ability: Torrent
+                        </p>
+                    </div>
+            </div>
+
+        </section>
+    </div>
+    </main>
+    <footer>
+        <p>Garyeong Bae</p>
+    </footer>
+</body>
+</html>
