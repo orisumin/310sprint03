@@ -118,8 +118,145 @@
 
         <section id="cards-container">
         </section>
-    </div>
-    </main>
+        </div>
+        </main>
+            <!-- Floating Add button -->
+        <button
+            type="button"
+            id="addPokemonBtn"
+            class="add-pokemon-button"
+        >
+            + Add Pokémon
+        </button>
+
+        <!-- Create Pokémon popup -->
+        <dialog id="addPokemonDialog" class="pokemon-dialog" aria-labelledby="addPokemonTitle">
+            <div class="dialog-heading">
+                <h2 id="addPokemonTitle">Add Pokémon</h2>
+
+                <button type="button" id="closeAddDialog" class="dialog-close" aria-label="Close add Pokémon form">
+                    ×
+                </button>
+            </div>
+
+            <form id="addPokemonForm" method="dialog">
+                <div class="pokemon-form-grid">
+
+                    <div class="form-field full-width">
+                        <label for="pokemonNumber">Pokédex number</label>
+                        <input type="number" id="pokemonNumber" name="_id" min="1" max="9007199254740991" step="1" required autofocus>
+                    </div>
+
+                    <div class="form-field full-width">
+                        <label for="pokemonName">Name</label>
+                        <input type="text" id="pokemonName" name="name" maxlength="80" pattern="[A-Za-z0-9_\-]+" aria-describedby="pokemonNameHelp" required>
+                        <small id="pokemonNameHelp">
+                            Use letters, numbers, hyphens, or underscores.
+                        </small>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="pokemonType">Primary type</label>
+                        <select id="pokemonType" name="primaryType" required>
+                            <option value="">Choose a type</option>
+                            <!-- JavaScript will add the available types. -->
+                        </select>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="pokemonSecondType">
+                            Secondary type (optional)
+                        </label>
+                        <select id="pokemonSecondType" name="secondaryType">
+                            <option value="">None</option>
+                            <!-- JavaScript will add the available types. -->
+                        </select>
+                    </div>
+
+                    <div class="form-field full-width">
+                        <label for="pokemonCategory">Category</label>
+                        <input type="text" id="pokemonCategory" name="category" maxlength="120" placeholder="Fire Croc Pokémon" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="pokemonHeight">Height (m)</label>
+                        <input type="number" id="pokemonHeight" name="height" min="0" step="any" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="pokemonWeight">Weight (kg)</label>
+                        <input type="number" id="pokemonWeight" name="weight" min="0" step="any" required>
+                    </div>
+
+                    <fieldset class="ability-fieldset full-width">
+                        <legend>Abilities</legend>
+
+                        <div id="abilityFields">
+                            <div class="ability-row">
+                                <div class="form-field">
+                                    <label for="abilityInput0">Ability 1</label>
+                                    <input type="text" id="abilityInput0" name="ability" maxlength="100" required>
+                                </div>
+
+                                <button type="button" class="ability-remove" aria-label="Remove ability 1" disabled>
+                                    −
+                                </button>
+                            </div>
+                        </div>
+
+                        <button type="button" id="addAbilityButton" class="ability-add" aria-label="Add another ability">
+                            + Add ability
+                        </button>
+
+                        <small>
+                            Enter one ability per field, up to 10 abilities.
+                        </small>
+                    </fieldset>
+
+                <div class="form-field full-width">
+                    <label for="pokemonImage">Image path (optional)</label>
+                    <input type="text" id="pokemonImage" name="img" maxlength="200" placeholder="img/Fuecoco.webp" aria-describedby="pokemonImageHelp">
+                    <small id="pokemonImageHelp">
+                        Use an existing .webp image in the img folder.
+                        Leave blank to use the Pokémon's name.
+                    </small>
+                    </div>
+                </div>
+
+                <p id="addPokemonError" class="dialog-error" role="alert" hidden></p>
+
+                <div class="dialog-actions">
+                    <button type="button" id="cancelAddPokemon" class="secondary-button">
+                        Cancel
+                    </button>
+
+                    <button type="submit" id="submitPokemon" class="primary-button">
+                        Add
+                    </button>
+                </div>
+            </form>
+        </dialog>
+
+            <!-- Delete confirmation popup -->
+            <dialog id="deletePokemonDialog" class="pokemon-dialog delete-dialog" aria-labelledby="deletePokemonTitle" aria-describedby="deletePokemonMessage">
+                <h2 id="deletePokemonTitle">Delete Pokémon?</h2>
+
+                <p id="deletePokemonMessage">
+                    Do you really want to delete this Pokémon?
+                </p>
+
+                <p id="deletePokemonError" class="dialog-error" role="alert" hidden></p>
+
+                <div class="dialog-actions">
+                    <button type="button" id="cancelDeletePokemon" class="secondary-button" autofocus>
+                        No
+                    </button>
+
+                    <button type="button" id="confirmDeletePokemon" class="danger-button">
+                        Yes
+                    </button>
+                </div>
+            </dialog>
     <footer>
         <p>Garyeong Bae</p>
     </footer>

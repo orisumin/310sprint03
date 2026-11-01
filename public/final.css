@@ -211,6 +211,281 @@ footer{
     color: #fff585;
     margin-top: 70px;
 }
+/* Allow cards to grow when the Delete button is added. */
+.card {
+    height: auto;
+    min-height: 200px;
+}
+
+.card .description {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+/* Card Delete button */
+.delete-pokemon-button {
+    align-self: center;
+    margin-top: 12px;
+    padding: 8px 16px;
+    border: 1px solid #fff585;
+    border-radius: 10px;
+    background: transparent;
+    color: #fff585;
+    font: inherit;
+    cursor: pointer;
+}
+
+.delete-pokemon-button:hover {
+    background: #fff5851a;
+}
+
+/* Floating Add Pokémon button */
+.add-pokemon-button {
+    position: fixed;
+    right: 20px;
+    bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+    z-index: 20;
+    padding: 14px 20px;
+    border: 2px solid #fff585;
+    border-radius: 30px;
+    background: #4816ab;
+    color: #fff585;
+    font: inherit;
+    font-weight: 700;
+    box-shadow: 0 4px 16px #00000066;
+    cursor: pointer;
+}
+
+.add-pokemon-button:hover {
+    background: #fff585;
+    color: #4816ab;
+}
+
+/* Leave room below the page for the floating button. */
+footer {
+    padding-bottom: 100px;
+}
+
+/* Prevent the background page from scrolling during a popup. */
+body:has(.pokemon-dialog[open]) {
+    overflow: hidden;
+}
+
+/* Shared popup appearance */
+.pokemon-dialog {
+    box-sizing: border-box;
+    width: min(560px, calc(100% - 32px));
+    max-height: calc(100dvh - 32px);
+    padding: 24px;
+    border: 2px solid #62eaff;
+    border-radius: 20px;
+    background: #f5f2ff;
+    color: #321367;
+    text-align: left;
+    font-family: "IBM Plex Sans", Helvetica, sans-serif;
+    overflow-y: auto;
+}
+
+.pokemon-dialog::backdrop {
+    background: #14062dbf;
+}
+
+.pokemon-dialog h2 {
+    margin: 0;
+    font-size: 25px;
+}
+
+.dialog-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.dialog-close {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 50%;
+    background: #e4dcff;
+    color: #321367;
+    font-size: 25px;
+    cursor: pointer;
+}
+
+/* Two-column create form */
+.pokemon-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.pokemon-form-grid > .full-width {
+    grid-column: 1 / -1;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+
+.form-field label,
+.ability-fieldset legend {
+    font-weight: 700;
+}
+
+.form-field input,
+.form-field select {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    padding: 10px;
+    border: 1px solid #a89ac9;
+    border-radius: 8px;
+    background: white;
+    color: #24123f;
+    font: inherit;
+    font-size: 16px;
+}
+
+.form-field small,
+.ability-fieldset small {
+    color: #5d4d77;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+/* Ability fields and + / − buttons */
+.ability-fieldset {
+    box-sizing: border-box;
+    min-width: 0;
+    margin: 0;
+    padding: 12px;
+    border: 1px solid #a89ac9;
+    border-radius: 10px;
+}
+
+.ability-fieldset legend {
+    padding: 0 6px;
+}
+
+.ability-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.ability-row .form-field {
+    flex: 1;
+}
+
+.ability-add,
+.ability-remove {
+    border: 1px solid #a89ac9;
+    border-radius: 8px;
+    background: #e4dcff;
+    color: #321367;
+    font: inherit;
+    cursor: pointer;
+}
+
+.ability-add {
+    padding: 8px 12px;
+    margin-bottom: 8px;
+}
+
+.ability-remove {
+    flex: 0 0 42px;
+    height: 42px;
+    font-size: 24px;
+}
+
+.ability-fieldset small {
+    display: block;
+}
+
+/* Popup action buttons */
+.dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.dialog-actions button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.primary-button {
+    background: #4816ab;
+    color: white;
+}
+
+.secondary-button {
+    background: #e4dcff;
+    color: #321367;
+}
+
+.danger-button {
+    background: #a51b43;
+    color: white;
+}
+
+.dialog-actions button:hover {
+    filter: brightness(0.92);
+}
+
+/* Validation and request errors */
+.dialog-error {
+    padding: 12px;
+    border-radius: 8px;
+    background: #ffe2e9;
+    color: #8a1430;
+    overflow-wrap: anywhere;
+}
+
+/* Disabled controls and keyboard focus */
+.pokemon-dialog button:disabled,
+.delete-pokemon-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pokemon-dialog :focus-visible,
+.add-pokemon-button:focus-visible,
+.delete-pokemon-button:focus-visible {
+    outline: 3px solid #00a4bb;
+    outline-offset: 3px;
+}
+#searchBar:focus-visible {
+    outline: 3px solid #4816ab;
+    outline-offset: 2px;
+}
+/* Stack form fields on small screens. */
+@media screen and (max-width: 479px) {
+    .pokemon-form-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .pokemon-dialog {
+        padding: 18px;
+    }
+
+    .add-pokemon-button {
+        right: 12px;
+        bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    }
+}
 @media screen and (min-width:700px) {
     #search{
         width: 90%;
@@ -275,10 +550,7 @@ footer{
     }
     
 }
-#searchBar:focus-visible {
-    outline: 3px solid #4816ab;
-    outline-offset: 2px;
-}
+
 @media screen and (min-width:1100px) {
     #filters{
         margin-top: -65px;
@@ -324,4 +596,38 @@ footer{
         width: calc(100% - 24px);
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+}
+/* Let each card grow enough to contain its contents. */
+.card {
+    height: auto;
+    min-height: 200px;
+    align-items: stretch;
+}
+
+/* Make the details column fill the card's available height. */
+.card .description {
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+    min-width: 0;
+}
+
+/* Move the details upward by removing default paragraph margins. */
+.card .name {
+    margin: 0 0 6px;
+}
+
+.card .category {
+    margin: 0 0 8px;
+}
+
+.card .description > p:not(.name):not(.category) {
+    margin: 0 0 12px;
+}
+
+/* Keep Delete inside the bottom-right of the details column. */
+.card .delete-pokemon-button {
+    align-self: flex-end;
+    flex-shrink: 0;
+    margin-top: auto;
 }

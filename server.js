@@ -69,6 +69,11 @@ async function startServer() {
         });
 
       }catch(error){
+        if (error.code === 11000) {
+          return res.status(409).json({
+            error: "That Pokédex number already exists. Choose a different number."
+          });
+        }
         console.error(error);
         res.status(500).json({
           error:"Failed to add Pokemon"
@@ -81,7 +86,8 @@ async function startServer() {
           const id = req.params.id;
           const changes = req.body;
 
-          if (!ObjectId.isValid(id)){
+          const databaseId = parsePokemonId(id);
+          if (databaseId === null){
             return res.status(400).json({
               error:"Invalid pokemon id"
             });
@@ -105,7 +111,7 @@ async function startServer() {
 
           //update the databse, saves the update result 
           const result = await pokemons.updateOne(
-            {_id:new ObjectId(id)},
+            {_id: databaseId},
             {$set:updates}
           );
           if (result.matchedCount ===0){
@@ -130,14 +136,15 @@ async function startServer() {
         try{
           const id = req.params.id;
 
-          if (!ObjectId.isValid(id)){
+          const databaseId = parsePokemonId(id);
+          if (databaseId === null){
             return res.status(400).json({
               error:"invalid Pokemon ID"
             });
           }
 
           const result = await pokemons.deleteOne({
-            _id:new ObjectId(id)
+            _id: databaseId
           });
 
           if (result.deletedCount === 0){
@@ -190,6 +197,7 @@ function validatePokemon(data, partial = false) {
 
     // Each function returns true when its field is valid.
     const rules = {
+        _id: value => Number.isSafeInteger(value) && value > 0,
         name: value =>
             typeof value === "string" &&
             value.length <= 80 &&
@@ -235,6 +243,9 @@ function validatePokemon(data, partial = false) {
 
     // Reject unknown fields and invalid values.
     for (const field of fields) {
+        if (partial && field === "_id") {
+            return { error: "The Pokédex number cannot be changed." };
+        }
         if (!Object.hasOwn(rules, field)) {
             return { error: "Unknown field: " + field };
         }
@@ -245,7 +256,7 @@ function validatePokemon(data, partial = false) {
     }
 
     const requiredFields = [
-        "name", "type", "category", "height", "weight", "ability"
+        "_id", "name", "type", "category", "height", "weight", "ability"
     ];
 
     // POST requires all these fields; PATCH permits partial updates.
@@ -266,4 +277,18 @@ function validatePokemon(data, partial = false) {
 
     return { value };
 }
+// New records use numeric Pokédex IDs. Existing ObjectId records still work.
+function parsePokemonId(id) {
+    if (/^[1-9][0-9]*$/.test(id)) {
+        const number = Number(id);
+        if (Number.isSafeInteger(number)) {
+            return number;
+        }
+    }
+    if (ObjectId.isValid(id)) {
+        return new ObjectId(id);
+    }
+    return null;
+}
+
 startServer();

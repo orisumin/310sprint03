@@ -175,8 +175,18 @@ function displayCards(list) {
             /^[A-Za-z0-9_-]+$/.test(pokemon.name)
         ) {
             const image = makeElement("img", "pokemon");
-            image.src = `img/${pokemon.name}.webp`;
+            // Accept only local .webp paths from the image field.
+            const imagePath = typeof pokemon.img === "string" &&
+                /^img\/[A-Za-z0-9_-]+\.webp$/.test(pokemon.img) &&
+                !/[\r\n]/.test(pokemon.img)
+                    ? pokemon.img
+                    : `img/${pokemon.name}.webp`;
+
+            image.src = imagePath;
             image.alt = `${pokemon.name} image`;
+            image.addEventListener("error", () => {
+                image.replaceWith(makeElement("p", "", "Image unavailable"));
+            }, { once: true });
             imagePart.append(image);
         }
 
@@ -231,6 +241,21 @@ function displayCards(list) {
         );
 
         description.append(name, category, details);
+
+        // Create a Delete button for this Pokémon.
+        const deleteButton = makeElement(
+            "button",
+            "delete-pokemon-button",
+            "Delete"
+        );
+
+        deleteButton.type = "button";
+
+        deleteButton.addEventListener("click", () => {
+            openDeleteDialog(pokemon);
+        });
+
+        description.append(deleteButton);
         card.append(imagePart, description);
         cardsContainer.append(card);
     });
@@ -284,5 +309,293 @@ async function loadPokemons() {
             "Could not load Pokémon. Please refresh to try again.";
     }
 }
+
+// Popup controls are initialized before loading records.
+const addPokemonButton = document.querySelector("#addPokemonBtn");
+const addDialog = document.querySelector("#addPokemonDialog");
+const addForm = document.querySelector("#addPokemonForm");
+const submitPokemonButton = document.querySelector("#submitPokemon");
+const cancelAddButton = document.querySelector("#cancelAddPokemon");
+const closeAddButton = document.querySelector("#closeAddDialog");
+const addError = document.querySelector("#addPokemonError");
+const primaryType = document.querySelector("#pokemonType");
+const secondaryType = document.querySelector("#pokemonSecondType");
+const deleteDialog = document.querySelector("#deletePokemonDialog");
+const deleteMessage = document.querySelector("#deletePokemonMessage");
+const deleteError = document.querySelector("#deletePokemonError");
+const confirmDeleteButton = document.querySelector("#confirmDeletePokemon");
+const cancelDeleteButton = document.querySelector("#cancelDeletePokemon");
+// Create a success message without requiring another HTML element.
+const pageStatus = makeElement("p", "page-status");
+pageStatus.setAttribute("role", "status");
+pageStatus.style.color = "#fff585";
+pageStatus.hidden = true;
+document.querySelector("#search").before(pageStatus);
+
+function announce(message) {
+    pageStatus.hidden = false;
+    pageStatus.textContent = message;
+}
+const abilityFields = document.querySelector("#abilityFields");
+const addAbilityButton = document.querySelector("#addAbilityButton");
+let abilityInputCounter = 0;
+
+let pokemonToDelete = null;
+let creatingPokemon = false;
+let deletingPokemon = false;
+
+// Reuse the same type values as the search filters.
+typeList.forEach(checkbox => {
+    const type = checkbox.value;
+    const label = type === "fight" ? "Fighting" : type[0].toUpperCase() + type.slice(1);
+    [primaryType, secondaryType].forEach(select => {
+        const option = document.createElement("option");
+        option.value = type;
+        option.textContent = label;
+        select.append(option);
+    });
+});
+
+function showFormError(element, message) {
+    element.textContent = message;
+    element.hidden = !message;
+}
+
+function closeAddDialog() {
+    if (!creatingPokemon) {
+        addDialog.close();
+    }
+}
+
+function updateAbilityControls() {
+    const rows = abilityFields.querySelectorAll(".ability-row");
+    rows.forEach((row, index) => {
+        row.querySelector("label").textContent = `Ability ${index + 1}`;
+        const removeButton = row.querySelector("button");
+        removeButton.disabled = creatingPokemon || rows.length === 1;
+        removeButton.setAttribute("aria-label", `Remove ability ${index + 1}`);
+    });
+    addAbilityButton.disabled = creatingPokemon || rows.length >= 10;
+}
+
+function addAbilityInput() {
+    if (abilityFields.children.length >= 10 || creatingPokemon) {
+        return;
+    }
+    const row = makeElement("div", "ability-row");
+    const field = makeElement("div", "form-field");
+    const label = document.createElement("label");
+    const input = document.createElement("input");
+    input.id = `abilityInput${++abilityInputCounter}`;
+    input.name = "ability";
+    input.type = "text";
+    input.required = true;
+    input.maxLength = 100;
+    label.htmlFor = input.id;
+    field.append(label, input);
+
+    const removeButton = makeElement("button", "ability-remove", "−");
+    removeButton.type = "button";
+    removeButton.addEventListener("click", () => {
+        if (abilityFields.children.length <= 1 || creatingPokemon) {
+            return;
+        }
+        row.remove();
+        updateAbilityControls();
+        abilityFields.querySelector("input").focus();
+    });
+    row.append(field, removeButton);
+    abilityFields.append(row);
+    updateAbilityControls();
+    return input;
+}
+
+addAbilityButton.addEventListener("click", () => {
+    const input = addAbilityInput();
+    if (input) {
+        input.focus();
+    }
+});
+
+addPokemonButton.addEventListener("click", () => {
+    addForm.reset();
+    abilityFields.replaceChildren();
+    addAbilityInput();
+    showFormError(addError, "");
+    addDialog.showModal();
+});
+
+closeAddButton.addEventListener("click", closeAddDialog);
+cancelAddButton.addEventListener("click", closeAddDialog);
+addDialog.addEventListener("cancel", event => {
+    if (creatingPokemon) {
+        event.preventDefault();
+    }
+});
+
+function setCreateBusy(busy) {
+    creatingPokemon = busy;
+    addForm.querySelectorAll("input, select, button").forEach(control => {
+        control.disabled = busy;
+    });
+    closeAddButton.disabled = busy;
+    updateAbilityControls();
+    addForm.setAttribute("aria-busy", String(busy));
+    submitPokemonButton.textContent = busy ? "Adding…" : "Add";
+}
+
+async function requestJson(url, options = {}) {
+    const response = await fetch(url, options);
+    let result;
+
+    try {
+        result = await response.json();
+    } catch {
+        throw new Error(`The server returned an unreadable response (${response.status}). Refresh before trying again.`);
+    }
+
+    if (!response.ok) {
+        throw new Error(result.error || `Request failed (${response.status}).`);
+    }
+
+    return result;
+}
+
+addForm.addEventListener("submit", async event => {
+    event.preventDefault();
+    if (creatingPokemon || !addForm.reportValidity()) {
+        return;
+    }
+
+    showFormError(addError, "");
+
+    const formData = new FormData(addForm);
+    const abilities = formData.getAll("ability").map(ability => ability.trim());
+    const types = [primaryType.value];
+    if (secondaryType.value) {
+        types.push(secondaryType.value);
+    }
+
+    const newPokemon = {
+        _id: Number(formData.get("_id")),
+        name: formData.get("name").trim(),
+        type: types,
+        category: formData.get("category").trim(),
+        height: Number(formData.get("height")),
+        weight: Number(formData.get("weight")),
+        ability: abilities
+    };
+
+    const imagePath = formData.get("img").trim();
+    if (imagePath) {
+        newPokemon.img = imagePath;
+    }
+
+    if (!Number.isSafeInteger(newPokemon._id) || newPokemon._id <= 0) {
+        showFormError(addError, "Enter a positive whole number for the Pokédex number.");
+        return;
+    }
+    if (types.length === 2 && types[0] === types[1]) {
+        showFormError(addError, "Choose two different types, or leave the secondary type as None.");
+        return;
+    }
+    if (!newPokemon.category) {
+        showFormError(addError, "Enter a category.");
+        return;
+    }
+    if (!Number.isFinite(newPokemon.height) || newPokemon.height <= 0 ||
+        !Number.isFinite(newPokemon.weight) || newPokemon.weight <= 0) {
+        showFormError(addError, "Height and weight must be numbers greater than zero.");
+        return;
+    }
+    if (abilities.length < 1 || abilities.length > 10 || abilities.some(ability => ability.length === 0 || ability.length > 100)) {
+        showFormError(addError, "Enter 1–10 abilities, with no more than 100 characters each.");
+        return;
+    }
+    if (imagePath && (!/^img\/[A-Za-z0-9_-]+\.webp$/.test(imagePath) || /[\r\n]/.test(imagePath))) {
+        showFormError(addError, "Use an image path like img/Fuecoco.webp, or leave it blank.");
+        return;
+    }
+
+    setCreateBusy(true);
+    try {
+        const result = await requestJson("/api/Pokemons", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(newPokemon)
+        });
+
+        if (!Number.isSafeInteger(result.id) || result.id !== newPokemon._id) {
+            throw new Error("The server did not return the new Pokémon's ID. Refresh before trying again.");
+        }
+
+        pokemons.push({ ...newPokemon, _id: result.id });
+        filterByTypes();
+        announce(`${newPokemon.name} was added.`);
+        addDialog.close();
+        addForm.reset();
+    } catch (error) {
+        showFormError(addError, error.message || "Could not add the Pokémon. Please try again.");
+    } finally {
+        setCreateBusy(false);
+    }
+});
+
+function openDeleteDialog(pokemon) {
+    if (deletingPokemon) {
+        return;
+    }
+    pokemonToDelete = pokemon;
+    deleteMessage.textContent = `Do you really want to delete ${pokemon.name}?`;
+    showFormError(deleteError, "");
+    deleteDialog.showModal();
+}
+
+cancelDeleteButton.addEventListener("click", () => {
+    if (!deletingPokemon) {
+        deleteDialog.close();
+    }
+});
+
+deleteDialog.addEventListener("close", () => {
+    pokemonToDelete = null;
+});
+
+deleteDialog.addEventListener("cancel", event => {
+    if (deletingPokemon) {
+        event.preventDefault();
+    }
+});
+
+confirmDeleteButton.addEventListener("click", async () => {
+    if (!pokemonToDelete || deletingPokemon) {
+        return;
+    }
+
+    const pokemon = pokemonToDelete;
+    deletingPokemon = true;
+    confirmDeleteButton.disabled = true;
+    cancelDeleteButton.disabled = true;
+    confirmDeleteButton.textContent = "Deleting…";
+    showFormError(deleteError, "");
+
+    try {
+        await requestJson(`/api/Pokemons/${encodeURIComponent(pokemon._id)}`, {
+            method: "DELETE"
+        });
+
+        pokemons = pokemons.filter(item => item._id !== pokemon._id);
+        filterByTypes();
+        announce(`${pokemon.name} was deleted.`);
+        deleteDialog.close();
+    } catch (error) {
+        showFormError(deleteError, error.message || "Could not delete the Pokémon. Please try again.");
+    } finally {
+        deletingPokemon = false;
+        confirmDeleteButton.disabled = false;
+        cancelDeleteButton.disabled = false;
+        confirmDeleteButton.textContent = "Yes";
+    }
+});
 
 loadPokemons();
