@@ -275,6 +275,10 @@ footer{
     }
     
 }
+#searchBar:focus-visible {
+    outline: 3px solid #4816ab;
+    outline-offset: 2px;
+}
 @media screen and (min-width:1100px) {
     #filters{
         margin-top: -65px;
@@ -282,5 +286,42 @@ footer{
     #search{
         margin-top: 50px;
         margin-left: 28%;
+    }
+}
+@media screen and (max-width: 699px) {
+    .card {
+        box-sizing: border-box;
+        width: calc(100% - 20px);
+        max-width: 444px;
+        padding: 16px;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .card .img-part {
+        align-items: center;
+    }
+
+    .card .pokemon {
+        width: 120px;
+        max-width: 100%;
+        height: auto;
+    }
+
+    .card .description {
+        margin-left: 0;
+        min-width: 0;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+    }
+
+    #filters form {
+        box-sizing: border-box;
+        padding-left: 0;
+    }
+
+    #types {
+        width: calc(100% - 24px);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }

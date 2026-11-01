@@ -17,21 +17,26 @@
         <div id="banner"><img src="img/violet.avif" id="bannerImg">
         </div>
         <h1> Pokémon Violet: Base Forms </h1>
-
-            <div id="search">       
-                <form>               
-                    <input type="text" id="searchBar" name="search" placeholder="find a pokemon by their names, abilities, and categories" autocomplete="off">
-                    <button type="button" id="searchBtn">
-                        <img src="img/search.png" alt="magnifier image" id="magnifier">
+            <div id="search">
+                <form id="searchForm">
+                    <input
+                        type="search"
+                        id="searchBar"
+                        name="search"
+                        placeholder="Search names, abilities, or categories"
+                        autocomplete="off"
+                    >
+                    <button type="submit" id="searchBtn" aria-label="Search">
+                        <img src="img/search.png" alt="" id="magnifier">
                     </button>
-                </form>                        
+                </form>
             </div>
             <div id="dropdown-container">
                 <button id="dropdownBtn">filters ⮟</button>
             </div>
             
             <div class="widerView">
-            <wrapper id="filters" hidden>
+            <div id="filters" hidden>
                 <form>
                     <div id="types">
                         <div class="checksets">
@@ -88,7 +93,7 @@
                         </div>
                         <div class="checksets">
                             <input type="checkbox" class="checkboxes" name="elementalType14" id="elementalType14" value="poison">
-                            <label for="elementalType14" style="color: #ab6ac9;">Poision <img src="img/poison.png"></label>
+                            <label for="elementalType14" style="color: #ab6ac9;">Poison <img src="img/poison.png"></label>
                         </div>
                         <div class="checksets">
                             <input type="checkbox" class="checkboxes" name="elementalType15" id="elementalType15" value="psychic">
@@ -109,64 +114,9 @@
                     </div>               
                     <button class="apply">Apply</button>
                 </form>
-            </wrapper>
+            </div>
 
         <section id="cards-container">
-            <div class="card">
-                <div class="img-part">
-                    <img src="img/Fuecoco.webp" alt="Fuecoco image" class="pokemon"> 
-                    <div class="PKMtype">
-                        <p style="color: #ffa600;"><b>FIRE</b> </p>
-                        <img src="img/fire.png">
-                    </div>
-                </div>
-
-                    <div class="description">
-                        <p class="name">Fuecoco</p>
-                        <p class="category">Fire Croc Pokémon</p>
-                        <p>Height: 0.4m
-                            <br>Weight: 9.8kg
-                            <br>Ability: Blaze
-                        </p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="img-part">
-                    <img src="img/Sprigatito.webp" alt="Sprigatito image" class="pokemon"> 
-                    <div class="PKMtype">
-                        <p style="color: #71d164;"><b>GRASS</b> </p>
-                        <img src="img/grass.png">
-                    </div>
-                </div>
-
-                    <div class="description">
-                        <p class="name">Sprigatito</p>
-                        <p class="category">Grass Cat Pokémon</p>
-                        <p>Height: 0.4m
-                            <br>Weight: 4.1kg
-                            <br>Ability: Overgrow
-                        </p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="img-part">
-                    <img src="img/Quaxly.webp" alt="Quaxly image" class="pokemon"> 
-                    <div class="PKMtype">
-                        <p style="color: #72aaea;"><b>WATER</b> </p>
-                        <img src="img/water.png">
-                    </div>
-                </div>
-
-                    <div class="description">
-                        <p class="name">Quaxly</p>
-                        <p class="category">Duckling Pokémon</p>
-                        <p>Height: 0.5m
-                            <br>Weight: 6.1kg
-                            <br>Ability: Torrent
-                        </p>
-                    </div>
-            </div>
-
         </section>
     </div>
     </main>

@@ -1,12 +1,12 @@
 {
   "name": "310sprint03",
   "version": "1.0.0",
-  "description": "Add a description of your project here.",
-  "main": "index.js",
+  "description": "A Pokémon search website using Express and MongoDB, with CRUD API routes.",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
-  },
+  "start": "node server.js",
+  "check": "node --check server.js && node --check public/final.js"
+},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/orisumin/310sprint03.git"
